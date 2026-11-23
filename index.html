@@ -1,0 +1,1624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURA — Vibe Creation SaaS Prototype</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Babel for in-browser JSX compilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(150, 150, 150, 0.3);
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel" data-type="module">
+    import React, { useState } from 'https://esm.sh/react@18.3.1';
+    import { createRoot } from 'https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1';
+    import {
+      Sparkles,
+      Compass,
+      Shirt,
+      Camera,
+      Headphones,
+      Sun,
+      Moon,
+      MapPin,
+      Shuffle,
+      Bookmark,
+      Check,
+      Copy,
+      Grid,
+      Zap,
+      Play,
+      Pause,
+      ChevronRight,
+      RefreshCw,
+      X,
+      Clock,
+      CheckCircle2,
+      Circle,
+      Aperture,
+      Wifi,
+      Battery,
+      ArrowLeft,
+      SlidersHorizontal
+    } from 'https://esm.sh/lucide-react@0.460.0?deps=react@18.3.1';
+
+    const VIBE_PRESETS = {
+      'blue-day': {
+        id: 'vibe-blue-1',
+        occasion: 'Solo Reset (Blue Day)',
+        emoji: '🌧️',
+        badge: 'DOPAMINE RECOVERY',
+        title: 'Rainy Window & Warm Matcha Sanctuary',
+        subtitle: 'Zero social performance. A gentle 90-minute sensory reset designed to get you out of your head.',
+        gradient: 'from-sky-400/40 via-indigo-500/30 to-teal-400/30',
+        accentColor: '#38bdf8',
+        heroImage: 'https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=900&q=80',
+        fitImage: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+        move: {
+          venueType: 'Second-Floor Book Cafe or Botanical Glasshouse',
+          searchQuery: 'Quiet indie coffee shop big windows plants near me',
+          timeWindow: '3:30 PM – 5:00 PM',
+          description: 'Claim a corner seat facing the street or greenery—never facing the center of the room. Leave your laptop at home; bring only headphones and watch the light shift.',
+          microMissions: [
+            'Switch phone to "Do Not Disturb" before stepping out',
+            'Order a warm ceremonial matcha oat latte in a ceramic mug',
+            'Jot down 3 thoughts on paper, then close the notebook'
+          ]
+        },
+        fit: {
+          formulaTitle: 'Tactile Armor & Soft Structure',
+          items: [
+            { part: 'Top Layer', icon: '🧥', desc: 'Heavyweight waffle-knit crewneck or washed hoodie' },
+            { part: 'Bottoms', icon: '👖', desc: 'Relaxed wide-leg pleated wool or soft cotton trousers' },
+            { part: 'Kicks & Accent', icon: '👟', desc: 'Suede clogs or vintage runners + ribbed beanie' }
+          ],
+          palette: [
+            { name: 'Oatmilk', hex: '#E8E2D5' },
+            { name: 'Rain Slate', hex: '#4A5D6E' },
+            { name: 'Matcha', hex: '#6E7F68' },
+            { name: 'Espresso', hex: '#2B211E' }
+          ],
+          lightingTip: 'Window-diffused light loves texture over loud prints. Ribbed knits and suede catch soft shadows effortlessly.'
+        },
+        shot: {
+          vibeNote: 'No forced smiles required. Focus on cozy, anonymous storytelling.',
+          poses: [
+            {
+              id: 'pose-1',
+              name: 'Anonymous Table Overhead',
+              lens: '1.5x (35mm)',
+              angle: 'Chest height, 45° down',
+              instruction: 'Rest one hand near the ceramic cup while looking out the window away from the lens.'
+            },
+            {
+              id: 'pose-2',
+              name: 'Window Reflection Blur',
+              lens: '1x Live Photo',
+              angle: 'Eye-level glass reflection',
+              instruction: 'Snap your reflection while adjusting headphones mid-stride. Phone covers half your face.'
+            },
+            {
+              id: 'pose-3',
+              name: 'Texture Flatlay Stack',
+              lens: '2x Macro',
+              angle: 'Top-down 90°',
+              instruction: 'Frame your sleeve cuff, notebook edge, and drink in the bottom-right grid intersection.'
+            }
+          ]
+        },
+        frequency: {
+          moodProfile: 'Warm Analog Ambient & Alté Soul',
+          bpm: '74 BPM • Alpha Calm',
+          sensoryAnchor: 'Rain on pavement, cedarwood, and steamed oat milk.',
+          tracks: [
+            { title: 'Warm Vinyl Crackle & Rhodes', artist: 'Lo-Fi Jazz Collective', tag: 'Instrumental' },
+            { title: 'Soft Alté Sunset Cruise', artist: 'Tems / Gabzy Vibe', tag: 'Afro-Soul' },
+            { title: 'Kyoto Rain Window', artist: 'Ambient Field Recordings', tag: 'Drift' }
+          ]
+        }
+      },
+      'travel': {
+        id: 'vibe-travel-1',
+        occasion: 'Main Character Travel',
+        emoji: '✈️',
+        badge: 'GOLDEN HOUR EXPEDITION',
+        title: 'Rooftop Terracotta & Old-Quarter Drift',
+        subtitle: 'High-cinema exploration built for magic-hour architecture, unplanned alley turns, and editorial portraits.',
+        gradient: 'from-amber-400/40 via-rose-500/30 to-orange-500/30',
+        accentColor: '#f59e0b',
+        heroImage: 'https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=900&q=80',
+        fitImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+        move: {
+          venueType: 'Historic Design Quarter → Open-Air Rooftop',
+          searchQuery: 'Architectural viewpoint & rooftop terrace sunset cocktails',
+          timeWindow: '4:45 PM – 7:15 PM',
+          description: 'Start 90 minutes before sunset in a textured pedestrian quarter. Walk without GPS for 25 minutes following warm directional light, then head up to a terrace.',
+          microMissions: [
+            'Ask a local barista for their favorite architectural corner nearby',
+            'Order a citrus spritz or botanical tonic right at sunset',
+            'Record 5 seconds of ambient street audio before snapping stills'
+          ]
+        },
+        fit: {
+          formulaTitle: 'Cinematic Resort Tailoring',
+          items: [
+            { part: 'Top Layer', icon: '👔', desc: 'Unbuttoned structured linen overshirt over ribbed tank' },
+            { part: 'Bottoms', icon: '👖', desc: 'Tailored ankle-cropped trousers with a relaxed drape' },
+            { part: 'Kicks & Accent', icon: '🕶️', desc: 'Leather loafers, metal-frame sunglasses & silk scarf' }
+          ],
+          palette: [
+            { name: 'Terracotta', hex: '#C86D51' },
+            { name: 'Travertine', hex: '#DFD5C6' },
+            { name: 'Aegean', hex: '#0C3551' },
+            { name: 'Sun Gold', hex: '#E5A93C' }
+          ],
+          lightingTip: 'Position the golden-hour sun at 4 o’clock behind your shoulder so linen fibers glow with a warm rim light.'
+        },
+        shot: {
+          vibeNote: 'Shoot wide so the destination breathes; you are the anchor in a movie frame.',
+          poses: [
+            {
+              id: 'pose-1',
+              name: 'The 0.5x Architectural Lean',
+              lens: '0.5x Ultra-Wide',
+              angle: 'Low waist-level tilted up',
+              instruction: 'Lean one shoulder against a stone archway, one foot crossed, looking down while adjusting your sunglasses.'
+            },
+            {
+              id: 'pose-2',
+              name: 'Over-the-Shoulder Walk Away',
+              lens: '2x Portrait (50mm)',
+              angle: 'Eye level, 10ft back',
+              instruction: 'Walk away slowly, then glance back over your left shoulder mid-step as if someone called your name.'
+            },
+            {
+              id: 'pose-3',
+              name: 'Terrace Silhouette Toast',
+              lens: '1x (-0.7 EV Exposure)',
+              angle: 'Table level into sunset',
+              instruction: 'Hold your glass slightly forward so sunlight refracts through the drink while your profile stays sharp.'
+            }
+          ]
+        },
+        frequency: {
+          moodProfile: 'Cinematic Afro-House & Riviera Funk',
+          bpm: '116 BPM • Stride Flow',
+          sensoryAnchor: 'Warm stone, citrus zest, espresso crema, and evening breeze.',
+          tracks: [
+            { title: 'Sunset Terrace Percussion', artist: 'Keinemusik / Black Coffee Vibe', tag: 'Afro-House' },
+            { title: 'Riviera Funk & Bassline', artist: 'L’Impératrice / Parcels Vibe', tag: 'Golden Groove' },
+            { title: 'Coastal Highway Synth', artist: 'Khruangbin / Maribou State Vibe', tag: 'Drift' }
+          ]
+        }
+      },
+      'linkup': {
+        id: 'vibe-linkup-1',
+        occasion: 'Low-Key Linkup',
+        emoji: '🥂',
+        badge: 'EFFORTLESS CHEMISTRY',
+        title: 'Vinyl Listening Bar & Late Gelato Walk',
+        subtitle: 'Zero awkward interview energy. Built around side-by-side sensory discovery and warm acoustics.',
+        gradient: 'from-rose-400/40 via-purple-500/30 to-amber-400/30',
+        accentColor: '#f43f5e',
+        heroImage: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=900&q=80',
+        fitImage: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&w=800&q=80',
+        move: {
+          venueType: 'Hi-Fi Vinyl Lounge or Art-Book Concept Store',
+          searchQuery: 'Vinyl listening bar artisanal small plates cozy seating',
+          timeWindow: '5:30 PM – 8:00 PM',
+          description: 'Skip noisy restaurants where you have to shout. Pick a spot with an anchor activity—flipping through art books or sitting side-by-side facing a vinyl booth.',
+          microMissions: [
+            'Each person picks one vinyl sleeve or book cover purely by aesthetics',
+            'Share two small plates and chilled natural wine or hibiscus craft soda',
+            'Snap one disposable-style flash candid before leaving the booth'
+          ]
+        },
+        fit: {
+          formulaTitle: 'Smart-Casual Contrast & Subtle Edge',
+          items: [
+            { part: 'Top Layer', icon: '🧥', desc: 'Cropped workwear jacket or fine-gauge knit polo' },
+            { part: 'Bottoms', icon: '👖', desc: 'Raw straight-leg selvedge denim or satin slip skirt' },
+            { part: 'Kicks & Accent', icon: '💍', desc: 'Chelsea boots or gum-sole runners + silver signet ring' }
+          ],
+          palette: [
+            { name: 'Raw Indigo', hex: '#1E2F44' },
+            { name: 'Cognac', hex: '#8F5338' },
+            { name: 'Warm Ivory', hex: '#F3EFEA' },
+            { name: 'Negroni', hex: '#D9534F' }
+          ],
+          lightingTip: 'Warm tungsten bulbs cast an amber glow. Wearing crisp ivory or silver near your neckline bounces clean light onto your face.'
+        },
+        shot: {
+          vibeNote: 'Candid motion beats stiff posing every single time.',
+          poses: [
+            {
+              id: 'pose-1',
+              name: 'Across-the-Booth Candid Laugh',
+              lens: '1.5x Lens (No Flash)',
+              angle: 'Slightly below eye level',
+              instruction: 'Rest your chin on your knuckles while listening, then catch a mid-sentence laugh looking off-camera.'
+            },
+            {
+              id: 'pose-2',
+              name: 'Vinyl Crate Browsing Profile',
+              lens: '1x Main Lens',
+              angle: 'Side profile down the shelf',
+              instruction: 'Flip through records with both hands, shoulders relaxed, letting the shelves form leading lines.'
+            },
+            {
+              id: 'pose-3',
+              name: 'Curbside Duo Fisheye',
+              lens: '0.5x High-Angle Selfie',
+              angle: '45° down toward street',
+              instruction: 'Stand close under a warm streetlamp; one looks at the lens while the other looks down at their kicks.'
+            }
+          ]
+        },
+        frequency: {
+          moodProfile: 'Neo-Soul, Alté R&B & Analog Grooves',
+          bpm: '96 BPM • Easy Bounce',
+          sensoryAnchor: 'Warm tube amps, toasted sesame, cardamom, and leather booths.',
+          tracks: [
+            { title: 'Velvet Evening Bounce', artist: 'Amaarae / Kaytranada Vibe', tag: 'Alté Bounce' },
+            { title: 'Tokyo Hi-Fi Jazz Funk', artist: 'Tom Misch / Casiopea Vibe', tag: 'Vinyl Groove' },
+            { title: 'Late Tea & Velvet Chords', artist: 'Cleo Sol / SAULT Vibe', tag: 'Neo-Soul' }
+          ]
+        }
+      },
+      'night-out': {
+        id: 'vibe-night-1',
+        occasion: 'Spontaneous Night Out',
+        emoji: '⚡',
+        badge: 'AFTER-HOURS ELECTRIC',
+        title: 'Neon Speakeasy & Midnight Rooftop Flash',
+        subtitle: 'High voltage, spontaneous kinetic energy, metallic textures, and unapologetic flash photography.',
+        gradient: 'from-fuchsia-500/40 via-violet-600/35 to-cyan-400/35',
+        accentColor: '#e879f9',
+        heroImage: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=900&q=80',
+        fitImage: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+        move: {
+          venueType: 'Hidden Alley Speakeasy → Late-Night Skyline Deck',
+          searchQuery: 'Speakeasy cocktail lounge DJ late night rooftop near me',
+          timeWindow: '9:30 PM – 1:00 AM',
+          description: 'Start somewhere intimate with heavy basslines to build momentum, then pivot at 11:30 PM to a high-energy late-night street food spot or open-air deck.',
+          microMissions: [
+            'Skip the menu—give the bartender two flavor words ("Smoky & Citrus")',
+            'Snap an elevator chrome-mirror shot during the venue switch',
+            'End with a 12:30 AM street-food stop under neon lights'
+          ]
+        },
+        fit: {
+          formulaTitle: 'Nocturnal Monochrome + Statement Sheen',
+          items: [
+            { part: 'Top Layer', icon: '🖤', desc: 'Boxy leather jacket or sheer layer under oversized blazer' },
+            { part: 'Bottoms', icon: '⛓️', desc: 'Charcoal wide-leg cargos or hardware-accented dark denim' },
+            { part: 'Kicks & Accent', icon: '🕶️', desc: 'Square-toe boots + chunky silver chain & tinted frames' }
+          ],
+          palette: [
+            { name: 'Obsidian', hex: '#090D16' },
+            { name: 'Chrome', hex: '#D8E2EB' },
+            { name: 'Cyber Cyan', hex: '#00F0FF' },
+            { name: 'Neon Magenta', hex: '#F43F5E' }
+          ],
+          lightingTip: 'Hard flash flattens matte cotton. Mix matte black with one reflective texture (leather, silver, satin) so the flash pops in 3D.'
+        },
+        shot: {
+          vibeNote: 'Turn HARD FLASH ON. Embrace grain, motion blur, and paparazzi energy.',
+          poses: [
+            {
+              id: 'pose-1',
+              name: 'Paparazzi Flash Crouch',
+              lens: '1x + Hard Flash ON',
+              angle: 'Eye-to-eye crouching low',
+              instruction: 'Crouch in a stairwell or curb, tip sunglasses down 1 inch, and look straight into the flash.'
+            },
+            {
+              id: 'pose-2',
+              name: 'Elevator Chrome Convex',
+              lens: '0.5x Ultra-Wide',
+              angle: 'Aimed up at corner mirror',
+              instruction: 'Stand dead-center with hands in pockets and chin tilted up while shooting the metallic reflection.'
+            },
+            {
+              id: 'pose-3',
+              name: 'Shutter-Drag Neon Streak',
+              lens: '1x Flash + Wrist Twist',
+              angle: 'Chest height in front of neon',
+              instruction: 'Hold still for the flash burst, then twist the phone slightly right after to streak the neon lights.'
+            }
+          ]
+        },
+        frequency: {
+          moodProfile: 'Amapiano Log-Drums & Electric UK Garage',
+          bpm: '124 BPM • Peak Kinetic',
+          sensoryAnchor: 'Mezcal smoke, sub-bass vibration, leather, and crisp night air.',
+          tracks: [
+            { title: 'Midnight Log-Drum VIP', artist: 'Asake / Uncle Waffles Vibe', tag: 'Amapiano' },
+            { title: 'Warehouse 2-Step Flip', artist: 'Fred again.. / Sammy Virji Vibe', tag: 'UK Garage' },
+            { title: 'Afterhours Cyber Synth', artist: 'Kaytranada Dark Club Edit', tag: 'Bassline' }
+          ]
+        }
+      }
+    };
+
+    function App() {
+      const [themeMode, setThemeMode] = useState('day');
+      const [step, setStep] = useState(0);
+      const [selectedOccasion, setSelectedOccasion] = useState('travel');
+      const [energyLevel, setEnergyLevel] = useState(3);
+      const [spendLevel, setSpendLevel] = useState(2);
+      const [weather, setWeather] = useState('Golden Hour');
+      const [setting, setSetting] = useState('City Center');
+      const [styleVibe, setStyleVibe] = useState('Elevated Casual');
+
+      const [currentBlueprint, setCurrentBlueprint] = useState(VIBE_PRESETS['travel']);
+      const [activePillar, setActivePillar] = useState(0);
+      const [isSynthesizing, setIsSynthesizing] = useState(false);
+      const [completedMissions, setCompletedMissions] = useState([0]);
+      const [isPlayingAudio, setIsPlayingAudio] = useState(false);
+      const [activeTrackIndex, setActiveTrackIndex] = useState(0);
+      const [poseGhostOpen, setPoseGhostOpen] = useState(false);
+      const [activePoseIndex, setActivePoseIndex] = useState(0);
+      const [showGrid, setShowGrid] = useState(true);
+      const [flashEnabled, setFlashEnabled] = useState(false);
+      const [shutterFlash, setShutterFlash] = useState(false);
+      const [savedVault, setSavedVault] = useState([VIBE_PRESETS['blue-day']]);
+      const [vaultOpen, setVaultOpen] = useState(false);
+      const [toastMessage, setToastMessage] = useState(null);
+
+      const isDay = themeMode === 'day';
+
+      const triggerToast = (msg) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 2400);
+      };
+
+      const handlePickOccasion = (key) => {
+        setSelectedOccasion(key);
+        setCurrentBlueprint(VIBE_PRESETS[key]);
+        if (key === 'blue-day') {
+          setEnergyLevel(1);
+          setSpendLevel(1);
+          setWeather('Rainy & Cozy');
+          setStyleVibe('Cozy Editorial');
+        } else if (key === 'travel') {
+          setEnergyLevel(4);
+          setSpendLevel(3);
+          setWeather('Golden Hour');
+          setStyleVibe('Elevated Casual');
+        } else if (key === 'linkup') {
+          setEnergyLevel(3);
+          setSpendLevel(2);
+          setWeather('Soft Overcast');
+          setStyleVibe('Street Minimal');
+        } else if (key === 'night-out') {
+          setEnergyLevel(5);
+          setSpendLevel(4);
+          setWeather('Crisp Night');
+          setStyleVibe('Afterhours Edge');
+        }
+      };
+
+      const handleLaunchBlueprint = (isRemix = false) => {
+        setIsSynthesizing(true);
+        setTimeout(() => {
+          const base = VIBE_PRESETS[selectedOccasion] || VIBE_PRESETS['travel'];
+          const energyNames = ['Couch-Adjacent', 'Gentle Drift', 'Balanced Flow', 'High Momentum', 'Full Send'];
+          const spendNames = ['$0 Free', '$ Micro-Treat', '$$ Sweet Spot', '$$$ Treat Yourself'];
+
+          setCurrentBlueprint({
+            ...base,
+            badge: `${weather.toUpperCase()} • ${setting.toUpperCase()}`,
+            subtitle: `Tailored for ${energyNames[energyLevel - 1]} energy & ${spendNames[spendLevel - 1]} budget with ${styleVibe} styling.`,
+            fit: {
+              ...base.fit,
+              formulaTitle: `${styleVibe} • ${weather}`
+            }
+          });
+          setCompletedMissions([0]);
+          setActivePillar(0);
+          setIsSynthesizing(false);
+          setStep(3);
+          if (isRemix) triggerToast('✨ Vibe Remixed!');
+        }, 650);
+      };
+
+      const toggleMission = (idx) => {
+        setCompletedMissions((prev) =>
+          prev.includes(idx) ? prev.filter((i) => i !== idx) : [...prev, idx]
+        );
+      };
+
+      const handleCopyText = (text, label) => {
+        if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+        triggerToast(`Copied ${label}: ${text}`);
+      };
+
+      const handleSaveToVault = () => {
+        const exists = savedVault.some((v) => v.title === currentBlueprint.title);
+        if (!exists) {
+          setSavedVault([currentBlueprint, ...savedVault]);
+          triggerToast('💖 Saved to your Vibe Vault');
+        } else {
+          triggerToast('Already in your Vault');
+        }
+      };
+
+      const energyOptions = [
+        { level: 1, emoji: '🛋️', label: 'Couch-Adjacent', sub: '15% Battery • Keep it super gentle' },
+        { level: 2, emoji: '🌿', label: 'Low-Key Drift', sub: '35% Battery • Slow walk & warm drink' },
+        { level: 3, emoji: '🌊', label: 'Balanced Flow', sub: '60% Battery • Ready to explore' },
+        { level: 4, emoji: '✨', label: 'Main Character', sub: '85% Battery • High aesthetic energy' },
+        { level: 5, emoji: '🔥', label: 'Full Send', sub: '100% Battery • Spontaneous adventure' }
+      ];
+
+      const spendOptions = [
+        { level: 1, tag: '$0', label: 'Zero Spend', sub: 'Parks, architecture, window walk' },
+        { level: 2, tag: '$', label: 'Micro-Treat', sub: 'Under $15 • Specialty coffee or pastry' },
+        { level: 3, tag: '$$', label: 'Sweet Spot', sub: 'Cocktails, vinyl bar, small plates' },
+        { level: 4, tag: '$$$', label: 'Treat Yourself', sub: 'Rooftop reservations & statement night' }
+      ];
+
+      const currentPose = currentBlueprint.shot.poses[activePoseIndex] || currentBlueprint.shot.poses[0];
+
+      return (
+        <div
+          className={`min-h-screen w-full flex flex-col items-center justify-center p-2 sm:p-6 transition-colors duration-700 select-none relative overflow-hidden ${
+            isDay
+              ? 'bg-gradient-to-br from-rose-100 via-amber-50 to-sky-100 text-slate-900'
+              : 'bg-gradient-to-br from-[#060913] via-[#0f172a] to-[#1e1035] text-white'
+          }`}
+        >
+          {/* AMBIENT STUDIO BACKDROP BLOBS OUTSIDE THE PHONE */}
+          <div className="pointer-events-none fixed inset-0 overflow-hidden z-0">
+            <div
+              className={`absolute -top-24 left-1/4 w-96 h-96 rounded-full blur-3xl transition-all duration-1000 ${
+                isDay ? 'bg-amber-300/40' : 'bg-fuchsia-600/20'
+              }`}
+            />
+            <div
+              className={`absolute bottom-0 right-1/4 w-[28rem] h-[28rem] rounded-full blur-3xl transition-all duration-1000 ${
+                isDay ? 'bg-rose-300/40' : 'bg-cyan-500/20'
+              }`}
+            />
+          </div>
+
+          {/* TOP STUDIO TOOLBAR */}
+          <div className="relative z-20 mb-3 sm:mb-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 px-4 py-2 rounded-full backdrop-blur-xl bg-white/25 border border-white/40 shadow-lg">
+            <div className="flex items-center gap-1.5 pr-2 border-r border-current/15">
+              <Sparkles className="w-4 h-4 text-amber-500" />
+              <span className="text-xs font-extrabold tracking-wider">AURA MOBILE</span>
+            </div>
+
+            <div className="flex items-center bg-black/10 rounded-full p-0.5">
+              <button
+                onClick={() => setThemeMode('day')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  isDay
+                    ? 'bg-white text-amber-600 shadow-sm'
+                    : 'text-slate-300 hover:text-white'
+                }`}
+              >
+                <Sun className="w-3.5 h-3.5" />
+                <span>Day Glow</span>
+              </button>
+              <button
+                onClick={() => setThemeMode('night')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                  !isDay
+                    ? 'bg-slate-900 text-cyan-400 shadow-sm border border-cyan-500/30'
+                    : 'text-slate-600 hover:text-slate-900'
+                }`}
+              >
+                <Moon className="w-3.5 h-3.5" />
+                <span>Night Pulse</span>
+              </button>
+            </div>
+
+            <button
+              onClick={() => setStep(step === 3 ? 0 : 3)}
+              className={`px-3 py-1 rounded-full text-xs font-semibold border transition-all cursor-pointer ${
+                isDay
+                  ? 'bg-white/60 hover:bg-white border-slate-300/80 text-slate-800'
+                  : 'bg-white/10 hover:bg-white/20 border-white/20 text-white'
+              }`}
+            >
+              {step === 3 ? '↺ Restart Quiz Flow' : '⚡ Skip to Vibe Deck'}
+            </button>
+          </div>
+
+          {/* MOBILE PHONE DEVICE FRAME */}
+          <div
+            className={`relative z-10 w-full max-w-[400px] h-[790px] sm:h-[820px] rounded-[50px] p-3 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.45)] transition-all duration-500 border-[6px] ${
+              isDay
+                ? 'bg-slate-900 border-slate-800 shadow-rose-950/20'
+                : 'bg-[#05070e] border-slate-800/90 shadow-cyan-950/40'
+            }`}
+          >
+            {/* Dynamic Island Notch */}
+            <div className="absolute top-5 left-1/2 -translate-x-1/2 w-28 h-6 bg-black rounded-full z-40 flex items-center justify-between px-2.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-slate-800 border border-slate-700" />
+              <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+
+            {/* INNER PHONE SCREEN VIEWPORT */}
+            <div
+              className={`relative w-full h-full rounded-[38px] overflow-hidden flex flex-col justify-between transition-colors duration-700 ${
+                isDay
+                  ? 'bg-gradient-to-b from-[#FFF9F2] via-[#FFF0E5] to-[#F3E8FF] text-slate-900'
+                  : 'bg-gradient-to-b from-[#0B0F1F] via-[#13112C] to-[#090D1A] text-white'
+              }`}
+            >
+              {/* LIVE ANIMATED AURA MESH ORBS */}
+              <div className="pointer-events-none absolute inset-0 overflow-hidden z-0">
+                <div
+                  className={`absolute -top-16 -right-16 w-64 h-64 rounded-full blur-3xl transition-all duration-700 ${
+                    isDay
+                      ? 'bg-gradient-to-br from-amber-300/60 to-rose-400/50'
+                      : 'bg-gradient-to-br from-fuchsia-500/30 to-cyan-400/25'
+                  }`}
+                />
+                <div
+                  className={`absolute top-1/2 -left-20 w-72 h-72 rounded-full blur-3xl transition-all duration-700 ${
+                    isDay
+                      ? 'bg-gradient-to-tr from-sky-300/50 to-purple-300/50'
+                      : 'bg-gradient-to-tr from-indigo-600/30 to-amber-500/20'
+                  }`}
+                />
+              </div>
+
+              {/* FLOATING TOAST */}
+              {toastMessage && (
+                <div className="absolute top-14 inset-x-5 z-50 px-4 py-2.5 rounded-2xl backdrop-blur-xl bg-black/80 text-white border border-white/20 shadow-xl flex items-center justify-center gap-2 text-xs font-semibold animate-bounce">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                  <span className="truncate">{toastMessage}</span>
+                </div>
+              )}
+
+              {/* PHONE STATUS BAR & HEADER */}
+              <div className="relative z-20 pt-3 px-6 pb-2">
+                <div className="flex items-center justify-between text-[11px] font-bold opacity-80 mb-3">
+                  <span>9:41</span>
+                  <div className="flex items-center gap-1.5">
+                    <Wifi className="w-3.5 h-3.5" />
+                    <Battery className="w-4 h-4" />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-2">
+                  {step > 0 ? (
+                    <button
+                      onClick={() => setStep(step - 1)}
+                      className={`p-2 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
+                        isDay
+                          ? 'bg-white/60 border-white/80 text-slate-800 hover:bg-white'
+                          : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                      }`}
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                    </button>
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-amber-400 to-rose-500 flex items-center justify-center text-white shadow-md">
+                      <Sparkles className="w-4 h-4" />
+                    </div>
+                  )}
+
+                  <div className="flex-1 flex items-center gap-1.5 px-2">
+                    {[0, 1, 2, 3].map((idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setStep(idx)}
+                        className={`h-1.5 flex-1 rounded-full transition-all duration-500 cursor-pointer ${
+                          idx <= step
+                            ? isDay
+                              ? 'bg-gradient-to-r from-amber-500 to-rose-500'
+                              : 'bg-gradient-to-r from-cyan-400 to-fuchsia-400'
+                            : isDay
+                            ? 'bg-slate-300/70'
+                            : 'bg-white/15'
+                        }`}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={() => setVaultOpen(true)}
+                    className={`relative p-2 rounded-full backdrop-blur-md border transition-all cursor-pointer ${
+                      isDay
+                        ? 'bg-white/60 border-white/80 text-slate-800 hover:bg-white'
+                        : 'bg-white/10 border-white/20 text-white hover:bg-white/20'
+                    }`}
+                  >
+                    <Bookmark className="w-4 h-4" />
+                    <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-white text-[9px] font-bold flex items-center justify-center">
+                      {savedVault.length}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              {/* MAIN SCROLLABLE PHONE BODY */}
+              <div className="relative z-10 flex-1 overflow-y-auto px-5 py-2 flex flex-col justify-between">
+                {step === 0 && (
+                  <div className="space-y-4 my-auto">
+                    <div className="space-y-1.5">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest backdrop-blur-md border ${
+                          isDay
+                            ? 'bg-amber-500/15 border-amber-500/30 text-amber-800'
+                            : 'bg-cyan-400/15 border-cyan-400/30 text-cyan-300'
+                        }`}
+                      >
+                        <span>Step 1 of 3 • Vibe Check</span>
+                      </span>
+                      <h1 className="text-2xl font-extrabold tracking-tight leading-tight">
+                        What’s your current headspace?
+                      </h1>
+                      <p className={`text-xs ${isDay ? 'text-slate-600' : 'text-slate-300'}`}>
+                        Pick one card. We’ll curate your move, outfit, poses & soundtrack.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {[
+                        {
+                          key: 'blue-day',
+                          emoji: '🌧️',
+                          title: 'Solo Reset (Blue Day)',
+                          sub: 'Low-pressure dopamine recovery & cozy solo sanctuary',
+                          grad: 'from-sky-400/25 to-teal-400/15',
+                          ring: 'border-sky-400'
+                        },
+                        {
+                          key: 'travel',
+                          emoji: '✈️',
+                          title: 'Main Character Travel',
+                          sub: 'Golden hour streets, rooftop views & editorial shots',
+                          grad: 'from-amber-400/30 to-rose-400/20',
+                          ring: 'border-amber-400'
+                        },
+                        {
+                          key: 'linkup',
+                          emoji: '🥂',
+                          title: 'Low-Key Linkup',
+                          sub: 'Vinyl listening bars, effortless chemistry & candids',
+                          grad: 'from-rose-400/25 to-purple-400/20',
+                          ring: 'border-rose-400'
+                        },
+                        {
+                          key: 'night-out',
+                          emoji: '⚡',
+                          title: 'Spontaneous Night Out',
+                          sub: 'High voltage, neon speakeasies & flash photography',
+                          grad: 'from-fuchsia-500/30 to-cyan-400/20',
+                          ring: 'border-fuchsia-400'
+                        }
+                      ].map((card) => {
+                        const active = selectedOccasion === card.key;
+                        return (
+                          <button
+                            key={card.key}
+                            onClick={() => handlePickOccasion(card.key)}
+                            className={`w-full text-left p-3.5 rounded-3xl backdrop-blur-xl border transition-all duration-300 flex items-center gap-3.5 cursor-pointer ${
+                              active
+                                ? `bg-gradient-to-r ${card.grad} ${card.ring} border-2 shadow-lg scale-[1.01]`
+                                : isDay
+                                ? 'bg-white/60 border-white/80 hover:bg-white/80 shadow-sm'
+                                : 'bg-white/10 border-white/15 hover:bg-white/15'
+                            }`}
+                          >
+                            <div
+                              className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shrink-0 shadow-inner ${
+                                isDay ? 'bg-white/80' : 'bg-black/30'
+                              }`}
+                            >
+                              {card.emoji}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="font-extrabold text-sm flex items-center justify-between">
+                                <span>{card.title}</span>
+                                {active && (
+                                  <span className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center">
+                                    <Check className="w-3 h-3 stroke-[3]" />
+                                  </span>
+                                )}
+                              </div>
+                              <p
+                                className={`text-[11px] leading-snug mt-0.5 line-clamp-2 ${
+                                  isDay ? 'text-slate-600' : 'text-slate-300'
+                                }`}
+                              >
+                                {card.sub}
+                              </p>
+                            </div>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {step === 1 && (
+                  <div className="space-y-4 my-auto">
+                    <div className="space-y-1">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest backdrop-blur-md border ${
+                          isDay
+                            ? 'bg-rose-500/15 border-rose-500/30 text-rose-800'
+                            : 'bg-fuchsia-400/15 border-fuchsia-400/30 text-fuchsia-300'
+                        }`}
+                      >
+                        <span>Step 2 of 3 • Energy & Spend</span>
+                      </span>
+                      <h1 className="text-2xl font-extrabold tracking-tight">
+                        How much social battery do you have?
+                      </h1>
+                      <p className={`text-xs ${isDay ? 'text-slate-600' : 'text-slate-300'}`}>
+                        No judgement—we match the activity pace to your exact fuel level.
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      {energyOptions.map((opt) => {
+                        const active = energyLevel === opt.level;
+                        return (
+                          <button
+                            key={opt.level}
+                            onClick={() => setEnergyLevel(opt.level)}
+                            className={`w-full text-left px-3.5 py-2.5 rounded-2xl backdrop-blur-xl border transition-all flex items-center justify-between cursor-pointer ${
+                              active
+                                ? isDay
+                                  ? 'bg-gradient-to-r from-amber-400/30 to-rose-400/25 border-amber-500 border-2 shadow-md'
+                                  : 'bg-gradient-to-r from-cyan-400/25 to-fuchsia-500/25 border-cyan-400 border-2 shadow-md'
+                                : isDay
+                                ? 'bg-white/60 border-white/80 hover:bg-white/90'
+                                : 'bg-white/10 border-white/15 hover:bg-white/15'
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">{opt.emoji}</span>
+                              <div>
+                                <div className="text-xs font-extrabold">{opt.label}</div>
+                                <div className={`text-[10px] ${isDay ? 'text-slate-600' : 'text-slate-300'}`}>
+                                  {opt.sub}
+                                </div>
+                              </div>
+                            </div>
+                            {active && (
+                              <div className="w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </div>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div className="pt-1 space-y-2">
+                      <label className="text-xs font-extrabold uppercase tracking-wider opacity-75 block">
+                        Today’s Spend Appetite
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {spendOptions.map((sp) => {
+                          const active = spendLevel === sp.level;
+                          return (
+                            <button
+                              key={sp.level}
+                              onClick={() => setSpendLevel(sp.level)}
+                              className={`p-2.5 rounded-2xl backdrop-blur-xl border text-left transition-all cursor-pointer ${
+                                active
+                                  ? isDay
+                                    ? 'bg-amber-500 text-white border-amber-600 shadow-md'
+                                    : 'bg-cyan-400 text-slate-950 border-cyan-300 shadow-md'
+                                  : isDay
+                                  ? 'bg-white/60 border-white/80 text-slate-800'
+                                  : 'bg-white/10 border-white/15 text-white'
+                              }`}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-xs font-black">{sp.tag}</span>
+                                <span className="text-[11px] font-bold">{sp.label}</span>
+                              </div>
+                              <div
+                                className={`text-[10px] truncate mt-0.5 ${
+                                  active ? 'opacity-90' : isDay ? 'text-slate-500' : 'text-slate-400'
+                                }`}
+                              >
+                                {sp.sub}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {step === 2 && (
+                  <div className="space-y-4 my-auto">
+                    <div className="space-y-1">
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-widest backdrop-blur-md border ${
+                          isDay
+                            ? 'bg-purple-500/15 border-purple-500/30 text-purple-800'
+                            : 'bg-amber-400/15 border-amber-400/30 text-amber-300'
+                        }`}
+                      >
+                        <span>Step 3 of 3 • Scene & Fit</span>
+                      </span>
+                      <h1 className="text-2xl font-extrabold tracking-tight">
+                        Set the backdrop & wardrobe vibe
+                      </h1>
+                      <p className={`text-xs ${isDay ? 'text-slate-600' : 'text-slate-300'}`}>
+                        We use lighting physics to match your outfit palette to the weather.
+                      </p>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider opacity-75">
+                        1. Sky & Lighting
+                      </span>
+                      <div className="grid grid-cols-2 gap-2">
+                        {[
+                          { label: 'Golden Hour', emoji: '🌅' },
+                          { label: 'Rainy & Cozy', emoji: '🌧️' },
+                          { label: 'Soft Overcast', emoji: '☁️' },
+                          { label: 'Crisp Night', emoji: '🌙' }
+                        ].map((w) => {
+                          const active = weather === w.label;
+                          return (
+                            <button
+                              key={w.label}
+                              onClick={() => setWeather(w.label)}
+                              className={`p-3 rounded-2xl backdrop-blur-xl border flex items-center gap-2.5 text-xs font-bold transition-all cursor-pointer ${
+                                active
+                                  ? isDay
+                                    ? 'bg-gradient-to-r from-amber-400/35 to-rose-400/30 border-amber-500 border-2 shadow'
+                                    : 'bg-gradient-to-r from-cyan-400/30 to-fuchsia-400/25 border-cyan-400 border-2 shadow'
+                                  : isDay
+                                  ? 'bg-white/60 border-white/80'
+                                  : 'bg-white/10 border-white/15'
+                              }`}
+                            >
+                              <span className="text-lg">{w.emoji}</span>
+                              <span>{w.label}</span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider opacity-75">
+                        2. Surroundings
+                      </span>
+                      <div className="grid grid-cols-3 gap-2">
+                        {[
+                          { label: 'City Center', emoji: '🏙️' },
+                          { label: 'Coastal', emoji: '🌊' },
+                          { label: 'Quiet Hood', emoji: '🌿' }
+                        ].map((s) => {
+                          const active = setting === s.label;
+                          return (
+                            <button
+                              key={s.label}
+                              onClick={() => setSetting(s.label)}
+                              className={`p-2.5 rounded-2xl backdrop-blur-xl border text-center transition-all cursor-pointer ${
+                                active
+                                  ? isDay
+                                    ? 'bg-slate-900 text-white border-slate-900 shadow'
+                                    : 'bg-white text-slate-950 border-white shadow'
+                                  : isDay
+                                  ? 'bg-white/60 border-white/80'
+                                  : 'bg-white/10 border-white/15'
+                              }`}
+                            >
+                              <div className="text-base">{s.emoji}</div>
+                              <div className="text-[11px] font-bold mt-0.5">{s.label}</div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <span className="text-[11px] font-extrabold uppercase tracking-wider opacity-75">
+                        3. Closet Rotation
+                      </span>
+                      <div className="space-y-2">
+                        {[
+                          { label: 'Elevated Casual', emoji: '✨', desc: 'Linen layers, tailored trousers & loafers' },
+                          { label: 'Cozy Editorial', emoji: '🧶', desc: 'Waffle knits, wide-leg wool & vintage runners' },
+                          { label: 'Street Minimal', emoji: '🖤', desc: 'Boxy jacket, selvedge denim & silver hardware' }
+                        ].map((st) => {
+                          const active = styleVibe === st.label;
+                          return (
+                            <button
+                              key={st.label}
+                              onClick={() => setStyleVibe(st.label)}
+                              className={`w-full p-3 rounded-2xl backdrop-blur-xl border text-left flex items-center justify-between transition-all cursor-pointer ${
+                                active
+                                  ? isDay
+                                    ? 'bg-gradient-to-r from-amber-400/35 to-rose-400/25 border-amber-500 border-2'
+                                    : 'bg-gradient-to-r from-cyan-400/25 to-fuchsia-400/25 border-cyan-400 border-2'
+                                  : isDay
+                                  ? 'bg-white/60 border-white/80'
+                                  : 'bg-white/10 border-white/15'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5">
+                                <span className="text-lg">{st.emoji}</span>
+                                <div>
+                                  <div className="text-xs font-extrabold">{st.label}</div>
+                                  <div className={`text-[10px] ${isDay ? 'text-slate-600' : 'text-slate-300'}`}>
+                                    {st.desc}
+                                  </div>
+                                </div>
+                              </div>
+                              {active && <Check className="w-4 h-4 text-amber-500" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {step === 3 && (
+                  <div className="space-y-3 flex-1 flex flex-col justify-between">
+                    <div className="relative h-36 rounded-3xl overflow-hidden shadow-lg border border-white/30 shrink-0">
+                      <img
+                        src={currentBlueprint.heroImage}
+                        alt={currentBlueprint.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+
+                      <div className="absolute top-2.5 left-3 right-3 flex items-center justify-between">
+                        <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-white/25 backdrop-blur-md text-white border border-white/30">
+                          {currentBlueprint.emoji} {currentBlueprint.badge}
+                        </span>
+                        <div className="flex items-center gap-1.5">
+                          <button
+                            onClick={() => handleLaunchBlueprint(true)}
+                            className="p-1.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md text-white border border-white/30 cursor-pointer"
+                          >
+                            <Shuffle className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={handleSaveToVault}
+                            className="p-1.5 rounded-full bg-white/20 hover:bg-white/35 backdrop-blur-md text-white border border-white/30 cursor-pointer"
+                          >
+                            <Bookmark className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="absolute bottom-2.5 left-3 right-3 text-white">
+                        <h2 className="text-base font-black leading-tight truncate">
+                          {currentBlueprint.title}
+                        </h2>
+                        <p className="text-[10px] text-white/80 line-clamp-1 mt-0.5">
+                          {currentBlueprint.subtitle}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div
+                      className={`grid grid-cols-4 gap-1 p-1 rounded-2xl backdrop-blur-xl border shrink-0 ${
+                        isDay ? 'bg-white/70 border-white/90 shadow-sm' : 'bg-white/10 border-white/15'
+                      }`}
+                    >
+                      {[
+                        { idx: 0, label: 'Move', icon: Compass },
+                        { idx: 1, label: 'Fit', icon: Shirt },
+                        { idx: 2, label: 'Shot', icon: Camera },
+                        { idx: 3, label: 'Vibe', icon: Headphones }
+                      ].map((tab) => {
+                        const Icon = tab.icon;
+                        const active = activePillar === tab.idx;
+                        return (
+                          <button
+                            key={tab.idx}
+                            onClick={() => setActivePillar(tab.idx)}
+                            className={`py-2 rounded-xl flex flex-col items-center justify-center gap-0.5 text-[10px] font-extrabold transition-all cursor-pointer ${
+                              active
+                                ? isDay
+                                  ? 'bg-gradient-to-r from-amber-500 to-rose-500 text-white shadow'
+                                  : 'bg-gradient-to-r from-cyan-400 to-fuchsia-500 text-slate-950 shadow'
+                                : isDay
+                                ? 'text-slate-600 hover:text-slate-900'
+                                : 'text-slate-300 hover:text-white'
+                            }`}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                            <span>{tab.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    <div
+                      className={`flex-1 rounded-3xl p-4 backdrop-blur-2xl border shadow-xl flex flex-col justify-between overflow-y-auto ${
+                        isDay
+                          ? 'bg-white/75 border-white/90 text-slate-900'
+                          : 'bg-white/10 border-white/20 text-white'
+                      }`}
+                    >
+                      {activePillar === 0 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-amber-500">
+                              01 // Where & What
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-500 flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              {currentBlueprint.move.timeWindow}
+                            </span>
+                          </div>
+
+                          <div>
+                            <h3 className="text-sm font-black leading-snug">
+                              {currentBlueprint.move.venueType}
+                            </h3>
+                            <p
+                              className={`text-xs mt-1 leading-relaxed ${
+                                isDay ? 'text-slate-600' : 'text-slate-300'
+                              }`}
+                            >
+                              {currentBlueprint.move.description}
+                            </p>
+                          </div>
+
+                          <div className="space-y-1.5 pt-1">
+                            <div className="text-[10px] font-extrabold uppercase tracking-wider opacity-70">
+                              Tap as you complete:
+                            </div>
+                            {currentBlueprint.move.microMissions.map((m, i) => {
+                              const done = completedMissions.includes(i);
+                              return (
+                                <button
+                                  key={i}
+                                  onClick={() => toggleMission(i)}
+                                  className={`w-full text-left p-2.5 rounded-2xl border flex items-start gap-2.5 text-xs transition-all cursor-pointer ${
+                                    done
+                                      ? 'bg-emerald-500/15 border-emerald-500/40 line-through opacity-75'
+                                      : isDay
+                                      ? 'bg-white/80 border-slate-200/80'
+                                      : 'bg-black/25 border-white/10'
+                                  }`}
+                                >
+                                  {done ? (
+                                    <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
+                                  ) : (
+                                    <Circle className="w-4 h-4 opacity-50 shrink-0 mt-0.5" />
+                                  )}
+                                  <span className="leading-snug">{m}</span>
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          <button
+                            onClick={() =>
+                              handleCopyText(currentBlueprint.move.searchQuery, 'Maps Search')
+                            }
+                            className={`w-full py-2.5 px-3 rounded-2xl border text-xs font-bold flex items-center justify-between cursor-pointer ${
+                              isDay
+                                ? 'bg-amber-500/15 border-amber-500/30 text-amber-900'
+                                : 'bg-cyan-400/15 border-cyan-400/30 text-cyan-300'
+                            }`}
+                          >
+                            <span className="truncate flex items-center gap-1.5">
+                              <MapPin className="w-3.5 h-3.5 shrink-0" />
+                              <span className="truncate">{currentBlueprint.move.searchQuery}</span>
+                            </span>
+                            <Copy className="w-3.5 h-3.5 shrink-0 ml-2" />
+                          </button>
+                        </div>
+                      )}
+
+                      {activePillar === 1 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-rose-500">
+                              02 // Outfit Formula
+                            </span>
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/15 text-rose-500">
+                              {currentBlueprint.fit.formulaTitle}
+                            </span>
+                          </div>
+
+                          <div className="space-y-2">
+                            {currentBlueprint.fit.items.map((item, idx) => (
+                              <div
+                                key={idx}
+                                className={`p-2.5 rounded-2xl border flex items-center gap-3 ${
+                                  isDay
+                                    ? 'bg-white/80 border-slate-200/80'
+                                    : 'bg-black/25 border-white/10'
+                                }`}
+                              >
+                                <span className="text-xl">{item.icon}</span>
+                                <div>
+                                  <div className="text-[10px] font-extrabold uppercase opacity-60">
+                                    {item.part}
+                                  </div>
+                                  <div className="text-xs font-bold leading-snug">{item.desc}</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="space-y-1.5">
+                            <span className="text-[10px] font-extrabold uppercase tracking-wider opacity-70">
+                              Color Story (Tap to Copy Hex)
+                            </span>
+                            <div className="grid grid-cols-4 gap-2">
+                              {currentBlueprint.fit.palette.map((sw, i) => (
+                                <button
+                                  key={i}
+                                  onClick={() => handleCopyText(sw.hex, sw.name)}
+                                  className="group text-center cursor-pointer"
+                                >
+                                  <div
+                                    className="h-9 w-full rounded-xl border border-black/15 shadow-inner mb-1 group-hover:scale-105 transition-transform"
+                                    style={{ backgroundColor: sw.hex }}
+                                  />
+                                  <div className="text-[10px] font-bold truncate">{sw.name}</div>
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div
+                            className={`p-2.5 rounded-2xl text-[11px] leading-snug border ${
+                              isDay
+                                ? 'bg-amber-500/10 border-amber-500/30 text-amber-950'
+                                : 'bg-amber-400/10 border-amber-400/30 text-amber-200'
+                            }`}
+                          >
+                            <strong>💡 Lighting Tip:</strong> {currentBlueprint.fit.lightingTip}
+                          </div>
+                        </div>
+                      )}
+
+                      {activePillar === 2 && (
+                        <div className="space-y-2.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-cyan-500">
+                              03 // Poses & Angles
+                            </span>
+                            <button
+                              onClick={() => setPoseGhostOpen(true)}
+                              className="px-2.5 py-1 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 text-[10px] font-black flex items-center gap-1 shadow cursor-pointer"
+                            >
+                              <Aperture className="w-3 h-3 animate-spin" />
+                              <span>Open AR Ghost</span>
+                            </button>
+                          </div>
+
+                          <div className="space-y-2">
+                            {currentBlueprint.shot.poses.map((pose, idx) => {
+                              const active = activePoseIndex === idx;
+                              return (
+                                <div
+                                  key={idx}
+                                  onClick={() => setActivePoseIndex(idx)}
+                                  className={`p-2.5 rounded-2xl border transition-all cursor-pointer ${
+                                    active
+                                      ? isDay
+                                        ? 'bg-sky-500/15 border-sky-500 border-2'
+                                        : 'bg-cyan-400/15 border-cyan-400 border-2'
+                                      : isDay
+                                      ? 'bg-white/80 border-slate-200/80'
+                                      : 'bg-black/25 border-white/10'
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <span className="text-xs font-extrabold">
+                                      0{idx + 1}. {pose.name}
+                                    </span>
+                                    <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-black/10 font-bold">
+                                      {pose.lens}
+                                    </span>
+                                  </div>
+                                  <p
+                                    className={`text-[11px] mt-1 leading-snug ${
+                                      isDay ? 'text-slate-600' : 'text-slate-300'
+                                    }`}
+                                  >
+                                    {pose.instruction}
+                                  </p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                      {activePillar === 3 && (
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-purple-500">
+                              04 // Sonic Frequency
+                            </span>
+                            <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-purple-500/15 text-purple-400">
+                              {currentBlueprint.frequency.bpm}
+                            </span>
+                          </div>
+
+                          <div
+                            className={`p-3 rounded-2xl border flex items-center justify-between ${
+                              isDay
+                                ? 'bg-gradient-to-r from-amber-500/15 to-rose-500/15 border-rose-300'
+                                : 'bg-gradient-to-r from-fuchsia-500/20 to-cyan-500/20 border-white/15'
+                            }`}
+                          >
+                            <div className="min-w-0 pr-2">
+                              <div className="text-[10px] font-bold uppercase opacity-75">
+                                {currentBlueprint.frequency.moodProfile}
+                              </div>
+                              <div className="text-xs font-black truncate">
+                                {currentBlueprint.frequency.tracks[activeTrackIndex]?.title}
+                              </div>
+                              <div className="text-[10px] opacity-75 truncate">
+                                {currentBlueprint.frequency.tracks[activeTrackIndex]?.artist}
+                              </div>
+                            </div>
+                            <button
+                              onClick={() => setIsPlayingAudio(!isPlayingAudio)}
+                              className="w-10 h-10 rounded-full bg-gradient-to-tr from-amber-500 to-rose-500 text-white flex items-center justify-center shadow-md shrink-0 cursor-pointer"
+                            >
+                              {isPlayingAudio ? (
+                                <Pause className="w-4 h-4 fill-current" />
+                              ) : (
+                                <Play className="w-4 h-4 fill-current ml-0.5" />
+                              )}
+                            </button>
+                          </div>
+
+                          <div className="space-y-1.5">
+                            {currentBlueprint.frequency.tracks.map((tr, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setActiveTrackIndex(idx);
+                                  setIsPlayingAudio(true);
+                                }}
+                                className={`w-full text-left p-2.5 rounded-2xl border flex items-center justify-between text-xs transition-all cursor-pointer ${
+                                  activeTrackIndex === idx
+                                    ? isDay
+                                      ? 'bg-rose-500/15 border-rose-400 font-bold'
+                                      : 'bg-fuchsia-400/20 border-fuchsia-400 font-bold'
+                                    : isDay
+                                    ? 'bg-white/80 border-slate-200/80'
+                                    : 'bg-black/25 border-white/10'
+                                }`}
+                              >
+                                <div className="truncate">
+                                  <div className="text-xs font-bold truncate">{tr.title}</div>
+                                  <div className="text-[10px] opacity-70 truncate">{tr.artist}</div>
+                                </div>
+                                <span className="text-[9px] px-2 py-0.5 rounded-full bg-black/10 font-bold shrink-0">
+                                  {tr.tag}
+                                </span>
+                              </button>
+                            ))}
+                          </div>
+
+                          <div className="text-[11px] italic opacity-80 pt-1">
+                            🕯️ Sensory: {currentBlueprint.frequency.sensoryAnchor}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* BOTTOM PHONE ACTION BAR */}
+              <div className="relative z-20 px-5 pt-2 pb-5">
+                {step < 2 && (
+                  <button
+                    onClick={() => setStep(step + 1)}
+                    className={`w-full py-3.5 rounded-full font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-95 cursor-pointer ${
+                      isDay
+                        ? 'bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white shadow-rose-500/25'
+                        : 'bg-gradient-to-r from-cyan-400 via-sky-400 to-fuchsia-400 text-slate-950 shadow-cyan-500/25'
+                    }`}
+                  >
+                    <span>Continue</span>
+                    <ChevronRight className="w-4 h-4 stroke-[3]" />
+                  </button>
+                )}
+
+                {step === 2 && (
+                  <button
+                    onClick={() => handleLaunchBlueprint(false)}
+                    disabled={isSynthesizing}
+                    className={`w-full py-3.5 rounded-full font-extrabold text-sm shadow-xl flex items-center justify-center gap-2 transition-all hover:scale-[1.01] active:scale-95 cursor-pointer ${
+                      isDay
+                        ? 'bg-gradient-to-r from-amber-500 via-rose-500 to-purple-600 text-white shadow-rose-500/30'
+                        : 'bg-gradient-to-r from-cyan-400 via-fuchsia-400 to-amber-300 text-slate-950 shadow-fuchsia-500/30'
+                    }`}
+                  >
+                    {isSynthesizing ? (
+                      <>
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        <span>Curating Your Vibe...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-4 h-4" />
+                        <span>Reveal My Vibe Blueprint</span>
+                      </>
+                    )}
+                  </button>
+                )}
+
+                {step === 3 && (
+                  <div className="flex items-center justify-between gap-2">
+                    <button
+                      onClick={() => setStep(0)}
+                      className={`px-4 py-3 rounded-full text-xs font-extrabold backdrop-blur-xl border flex items-center gap-1.5 cursor-pointer ${
+                        isDay
+                          ? 'bg-white/75 border-white text-slate-800'
+                          : 'bg-white/10 border-white/20 text-white'
+                      }`}
+                    >
+                      <SlidersHorizontal className="w-3.5 h-3.5" />
+                      <span>Retake Check</span>
+                    </button>
+
+                    <button
+                      onClick={() => setActivePillar((activePillar + 1) % 4)}
+                      className={`flex-1 py-3 px-4 rounded-full font-extrabold text-xs shadow-lg flex items-center justify-center gap-1.5 cursor-pointer ${
+                        isDay
+                          ? 'bg-slate-900 text-white'
+                          : 'bg-gradient-to-r from-cyan-400 to-fuchsia-400 text-slate-950'
+                      }`}
+                    >
+                      <span>Next Card ({activePillar + 1}/4)</span>
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
+
+                <div className="w-32 h-1 rounded-full bg-current/25 mx-auto mt-3" />
+              </div>
+
+              {/* AR POSE GHOST CAMERA VIEWFINDER */}
+              {poseGhostOpen && (
+                <div className="absolute inset-0 z-50 bg-slate-950/95 backdrop-blur-xl flex flex-col justify-between p-5 text-white">
+                  <div className="pt-6 flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                      <span className="text-[11px] font-mono font-bold text-cyan-400">
+                        AR POSE GHOST
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={() => setShowGrid(!showGrid)}
+                        className={`p-1.5 rounded-lg border ${
+                          showGrid ? 'border-cyan-400 text-cyan-400' : 'border-white/20 text-white/50'
+                        }`}
+                      >
+                        <Grid className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setFlashEnabled(!flashEnabled)}
+                        className={`p-1.5 rounded-lg border ${
+                          flashEnabled
+                            ? 'border-amber-400 text-amber-400'
+                            : 'border-white/20 text-white/50'
+                        }`}
+                      >
+                        <Zap className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setPoseGhostOpen(false)}
+                        className="p-1.5 rounded-lg bg-white/10 text-white"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="relative flex-1 my-3 rounded-3xl bg-gradient-to-b from-slate-900 to-slate-950 border border-cyan-400/40 overflow-hidden flex items-center justify-center">
+                    {shutterFlash && <div className="absolute inset-0 bg-white z-40" />}
+
+                    {showGrid && (
+                      <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 pointer-events-none">
+                        <div className="border-r border-b border-white/15" />
+                        <div className="border-r border-b border-white/15" />
+                        <div className="border-b border-white/15" />
+                        <div className="border-r border-b border-white/15" />
+                        <div className="border-r border-b border-white/15" />
+                        <div className="border-b border-white/15" />
+                        <div className="border-r border-white/15" />
+                        <div className="border-r border-white/15" />
+                        <div />
+                      </div>
+                    )}
+
+                    <svg
+                      viewBox="0 0 240 320"
+                      className="w-56 h-72 drop-shadow-[0_0_12px_rgba(34,211,238,0.7)]"
+                    >
+                      <line
+                        x1="20"
+                        y1="210"
+                        x2="220"
+                        y2="210"
+                        stroke="#f59e0b"
+                        strokeWidth="1"
+                        strokeDasharray="4 4"
+                      />
+                      <circle
+                        cx="115"
+                        cy="88"
+                        r="22"
+                        stroke="#22d3ee"
+                        strokeWidth="2.5"
+                        fill="rgba(34,211,238,0.1)"
+                      />
+                      <path
+                        d="M72 142 Q115 124 158 142 L148 225 L82 225 Z"
+                        stroke="#22d3ee"
+                        strokeWidth="2.5"
+                        fill="rgba(34,211,238,0.06)"
+                      />
+                      <path
+                        d="M72 142 L54 185 L94 115"
+                        stroke="#22d3ee"
+                        strokeWidth="2.5"
+                        fill="none"
+                        strokeLinecap="round"
+                      />
+                      <path
+                        d="M158 142 L174 185 L148 218"
+                        stroke="#22d3ee"
+                        strokeWidth="2.5"
+                        fill="none"
+                        strokeLinecap="round"
+                      />
+                      <circle cx="94" cy="115" r="4" fill="#f59e0b" />
+                      <circle cx="148" cy="218" r="4" fill="#f59e0b" />
+                    </svg>
+
+                    <div className="absolute bottom-3 inset-x-3 p-3 rounded-2xl bg-black/75 backdrop-blur-md border border-white/15">
+                      <div className="text-[11px] font-bold text-cyan-400">
+                        {currentPose.name} • {currentPose.lens}
+                      </div>
+                      <p className="text-[11px] text-white/90 mt-0.5 leading-snug">
+                        {currentPose.instruction}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-3 pb-2">
+                    <div className="grid grid-cols-3 gap-1.5">
+                      {currentBlueprint.shot.poses.map((p, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setActivePoseIndex(idx)}
+                          className={`py-1.5 rounded-xl text-[11px] font-bold border ${
+                            activePoseIndex === idx
+                              ? 'bg-cyan-400 text-slate-950 border-cyan-400'
+                              : 'bg-white/5 border-white/15 text-white/70'
+                          }`}
+                        >
+                          Pose 0{idx + 1}
+                        </button>
+                      ))}
+                    </div>
+                    <button
+                      onClick={() => {
+                        setShutterFlash(true);
+                        setTimeout(() => setShutterFlash(false), 200);
+                        triggerToast('📸 Pose reference snapped!');
+                      }}
+                      className="w-full py-3 rounded-full bg-gradient-to-r from-cyan-400 to-fuchsia-400 text-slate-950 font-black text-xs shadow-lg"
+                    >
+                      Snap Pose Reference
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* SAVED VIBE VAULT */}
+              {vaultOpen && (
+                <div
+                  className={`absolute inset-0 z-50 backdrop-blur-2xl p-5 flex flex-col justify-between ${
+                    isDay ? 'bg-white/95 text-slate-900' : 'bg-slate-950/95 text-white'
+                  }`}
+                >
+                  <div className="pt-6 space-y-4 overflow-y-auto">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <Bookmark className="w-5 h-5 text-rose-500" />
+                        <h3 className="text-lg font-black">Saved Vibe Vault</h3>
+                      </div>
+                      <button
+                        onClick={() => setVaultOpen(false)}
+                        className="p-2 rounded-full bg-black/10"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="space-y-2.5">
+                      {savedVault.map((vibe, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => {
+                            setCurrentBlueprint(vibe);
+                            setStep(3);
+                            setVaultOpen(false);
+                          }}
+                          className={`p-3.5 rounded-3xl border cursor-pointer transition-all ${
+                            isDay
+                              ? 'bg-amber-50/80 border-amber-200 hover:bg-amber-100/70'
+                              : 'bg-white/10 border-white/15 hover:bg-white/15'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between text-[10px] font-bold uppercase text-rose-500">
+                            <span>
+                              {vibe.emoji} {vibe.occasion}
+                            </span>
+                            <span>Tap to open →</span>
+                          </div>
+                          <div className="text-sm font-black mt-1">{vibe.title}</div>
+                          <div className="flex items-center gap-1.5 mt-2">
+                            {vibe.fit.palette.map((sw, i) => (
+                              <span
+                                key={i}
+                                className="w-4 h-4 rounded-full border border-black/20"
+                                style={{ backgroundColor: sw.hex }}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setVaultOpen(false)}
+                    className="w-full py-3 rounded-full bg-slate-900 text-white text-xs font-extrabold"
+                  >
+                    Close Vault
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    const root = createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+</body>
+</html>
